@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Workers
+name: CI & Deploy Rust Worker
 
 on:
   push:
@@ -6,31 +6,29 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
+      - name: Set up Rust
+        uses: actions/setup-rust@v1
         with:
-          toolchain: stable
+          rust-version: stable
           target: wasm32-unknown-unknown
-          override: true
-
-      - name: Install wasm-bindgen
-        run: cargo install wasm-bindgen-cli --version 0.2.89
 
       - name: Install worker-build
-        run: cargo install worker-build
+        run: cargo install --locked worker-build
 
-      - name: Build project
+      - name: Build to Wasm
         run: worker-build --release
 
-      - name: Publish to Cloudflare Workers
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
+      - name: Publish to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
           command: publish
