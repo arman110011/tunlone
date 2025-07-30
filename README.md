@@ -24,7 +24,7 @@ and visit https://{YOUR-WORKERS-SUBDOMAIN}.workers.dev/link to get the config li
 ```sh
 $ make deploy
 ```
-
+##test
 4. Modify the [xray config](./config/xray.json) and run:
 ```sh
 $ xray -c ./config/xray.json
