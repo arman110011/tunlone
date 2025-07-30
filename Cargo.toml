@@ -16,7 +16,7 @@ serde           = { version = "1.0",  features = ["derive"] }
 serde_json      = "1.0"
 base64          = "0.22"
 getrandom       = { version = "0.2",  features = ["js"] }
-worker          = "0.0.24"
+worker          = "0.0.18"          # نسخهٔ سازگار با wasm-bindgen=0.2.88
 cidr            = { version = "0.2",  features = ["serde"] }
 lazy_static     = "1.4"
 futures-util    = "0.3.28"
@@ -38,3 +38,7 @@ opt-level      = "s"
 lto            = true
 strip          = true
 codegen-units  = 1
+
+# اینجا به Cargo می‌گوییم وقتی worker=0.0.18 خواست wasm-bindgen، از این نسخه استفاده کند:
+[patch.crates-io]
+wasm-bindgen = "=0.2.88"
