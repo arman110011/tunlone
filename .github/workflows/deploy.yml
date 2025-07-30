@@ -6,28 +6,31 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Rust
+      - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           target: wasm32-unknown-unknown
           override: true
 
-      - name: Install dependencies
-        run: |
-          rustup target add wasm32-unknown-unknown
-          cargo install worker-build
+      - name: Install wasm-bindgen
+        run: cargo install wasm-bindgen-cli --version 0.2.89
+
+      - name: Install worker-build
+        run: cargo install worker-build
 
       - name: Build project
         run: worker-build --release
 
-      - name: Publish to Cloudflare
-        run: npx wrangler deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: Publish to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: publish
