@@ -1,10 +1,17 @@
-name = "tunl"
-main = "build/worker/shim.mjs"
-compatibility_date = "2024-05-23"
-minify = true
+# wrangler.toml
+
+# اسمِ پروژه در Cloudflare Workers
+name = "tunlone"
+
+# آیدی حساب کاربری‌ات که در URL داشبورد می‌بینی
+account_id = "7ff4fe9664eaf73a9243c024a7e01de0"
+
+# استفاده از workers.dev subdomain به‌جای route
+workers_dev = true
 
 [build]
-command = "cargo install -q worker-build && worker-build --release"
+# خاموش کردن wasm-opt تا Bulk-memory ارور نده
+wasm-opt = false
 
-[env.dev]
-build = { command = "cargo install -q worker-build && worker-build --dev" }
+# اگر می‌خواهی روی دامنهٔ سفارشی route تنظیم کنی:
+# route = "example.com/*"
