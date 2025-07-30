@@ -8,15 +8,17 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Rust
-        uses: actions/setup-rust@v1
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
         with:
-          rust-version: stable
+          toolchain: stable
           target: wasm32-unknown-unknown
+          override: true
 
       - name: Install worker-build
         run: cargo install --locked worker-build
@@ -31,4 +33,5 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
           command: publish
